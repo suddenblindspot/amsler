@@ -1,0 +1,60 @@
+<html>
+  <head>
+    <style>
+      * { margin: 0; padding: 0 }
+    </style>
+  </head>
+  <body>
+    <canvas id="cvs" width="100%" height="100%">
+      <script>
+        var W = window.innerWidth;
+        var H = window.innerHeight;
+        var mrk = [];
+        var pos = {x: (W * 0.5) | 0, y: (H * 0.5) | 0};
+        var rad = 2;
+        window.onload = () => {
+          var cvs = document.getElementById("cvs");
+          cvs.width = W;
+          cvs.height = H;
+          var ctx = cvs.getContext("2d");
+          var dot = (x,y,col) => {
+            ctx.fillStyle=col;
+            ctx.beginPath();
+            ctx.arc(x,y,2,0,2*Math.PI);
+            ctx.fill();
+          };
+          setInterval(() => {
+            ctx.fillStyle="white";
+            ctx.clearRect(0,0,W,H);
+            var spc = 12;
+            for (var i = -128; i < 128; ++i) {
+              ctx.strokeStyle="rgb(200,200,200)";
+              ctx.beginPath();
+              ctx.moveTo(0,H*0.5+i*spc);
+              ctx.lineTo(W,H*0.5+i*spc);
+              ctx.stroke();
+              ctx.beginPath();
+              ctx.moveTo(W*0.5+i*spc,0);
+              ctx.lineTo(W*0.5+i*spc,H);
+              ctx.stroke();
+            }
+            dot(pos.x,pos.y,"black");
+            dot(W*0.5,H*0.5,"black");
+            for (var i = 0; i < mrk.length; ++i) {
+              dot(mrk[i].x, mrk[i].y, "rgb(128,128,128)");
+            }
+          }, 1000 / 30);
+        };
+        document.onkeydown = (e) => {
+          var vel = 4;
+          switch (String.fromCharCode(e.keyCode)) {
+            case "A": pos.x -= vel; break;
+            case "S": pos.y += vel; break;
+            case "D": pos.x += vel; break;
+            case "W": pos.y -= vel; break;
+            case " ": mrk.push({x:pos.x,y:pos.y}); break;
+          }
+        };
+      </script>
+  </body>
+</html>
